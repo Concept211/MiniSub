@@ -4,9 +4,9 @@ function updateChatMessages() {
     updater = $.periodic({ period: 1000, decay: 1.5, max_period: 1800000 }, function () {
         $.ajax({
             periodic: this,
-            url: baseURL + '/getChatMessages.view?u=' + username + '&p=' + password + '&v=' + version + '&c=' + applicationName + '&f=jsonp&since=' + starttime,
+            url: baseURL + '/getChatMessages.view?' + baseParams + '&since=' + starttime,
             method: 'GET',
-            dataType: 'jsonp',
+            dataType: protocol,
             timeout: 10000,
             success: function (data) {
                 if (data["subsonic-response"].chatMessages.chatMessage === undefined) {
@@ -49,10 +49,10 @@ function stopUpdateChatMessages() {
 function addChatMessage(msg) {
     $.ajax({
         type: 'GET',
-        url: baseURL + '/addChatMessage.view?u=' + username + '&p=' + password,
-        dataType: 'jsonp',
+        url: baseURL + '/addChatMessage.view?' + baseParams,
+        dataType: protocol,
         timeout: 10000,
-        data: { v: version, c: applicationName, f: "jsonp", message: msg },
+        data: { message: msg },
         success: function () {
             updater.reset();
         },

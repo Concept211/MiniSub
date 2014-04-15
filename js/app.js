@@ -1,98 +1,68 @@
-// Global Variables
+﻿// Global Variables
 var debug = false;
-var audio;
+var audio = null;
 var hostURL = location.href;
+var protocol = 'json';
 var baseURL;
-var version;
+var baseParams;
+var apiVersion;
 var username;
-var password;
+var password = '';
 var passwordenc;
 var server;
+var smwidth;
+var apiVersion = '1.6.0';
+var currentVersion = '2.4.1';
+var applicationName;
+var unity;
 
-//Sound manager
-soundManager.url = 'js/sm/swf';
-if ($.cookie('ForceFlash')) {
-    soundManager.preferFlash = true;
-} else {
-    soundManager.preferFlash = false;
-}
-soundManager.debugMode = false;
-//soundManager.useHTML5Audio = true;
-
-// Set auth cookies if specified in URL on launch
-var u = getParameterByName('u'); 
+// Get URL Querystring Parameters
+var u = getParameterByName('u');
 var p = getParameterByName('p');
 var s = getParameterByName('s');
 if (u && p && s) {
-    if (!$.cookie('username')) {
-        $.cookie('username', u, { expires: 365 });
+    // Auto configuration from Querystring params
+    if (!getCookie('username')) {
+        setCookie('username', u);
         username = u;
     }
-    if (!$.cookie('passwordenc')) {
-        $.cookie('passwordenc', p, { expires: 365 });
+    if (!getCookie('passwordenc')) {
+        setCookie('passwordenc', p);
         password = p;
     }
-    if (!$.cookie('Server')) {
-        $.cookie('Server', s, { expires: 365 });
-        baseURL = $.cookie('Server') + '/rest';
+    if (!getCookie('Server')) {
+        setCookie('Server', s, { expires: 365 });
+        server = getCookie('Server') + '/rest';
+        baseURL = server;
     }
     window.location.href = getPathFromUrl(window.location);
 }
-if ($.cookie('Server')) {
-    baseURL = $.cookie('Server') + '/rest';
+
+if (getCookie('Server')) {
+    server = getCookie('Server') + '/rest';
+    baseURL = server;
 }
-var applicationName;
-if ($.cookie('ApplicationName')) {
-    applicationName = $.cookie('ApplicationName');
+if (getCookie('ApplicationName')) {
+    applicationName = getCookie('ApplicationName');
 } else {
     applicationName = 'MiniSub';
 }
-if ($.cookie('username')) {
-    username = $.cookie('username');
+if (getCookie('username')) {
+    username = getCookie('username');
 }
-if ($.cookie('passwordenc')) {
-    password = $.cookie('passwordenc');
+if (getCookie('passwordenc')) {
+    password = getCookie('passwordenc');
 } else {
-    if ($.cookie('password')) {
-        password = 'enc:' + HexEncode($.cookie('password'));
+    if (getCookie('password')) {
+        password = 'enc:' + HexEncode(getCookie('password'));
     }
 }
-var auth = makeBaseAuth(username, password);
-if ($.cookie('password')) {
-    $.cookie('passwordenc', 'enc:' + HexEncode($.cookie('password')), { expires: 365 });
-    $.cookie('password', null);
+if (getCookie('password')) {
+    setCookie('passwordenc', 'enc:' + HexEncode(getCookie('password')));
+    setCookie('password', null);
 }
-var version = '1.6.0';
-
-function loadTabContent(tab) {
-    if (username && password) {
-        switch (tab) {
-            case '#tabLibrary':
-                if (debug) { console.log("TAG LIBRARY"); }
-                if ($.cookie('MusicFolders')) {
-                    loadArtists($.cookie('MusicFolders'), false);
-                } else {
-                    loadArtists();
-                }
-                getMusicFolders();
-                break;
-            case '#tabCurrent':
-                if (debug) { console.log("TAG CURRENT"); }
-                var header = generateSongHeaderHTML();
-                $("#CurrentPlaylistContainer thead").html(header);
-                break;
-            case '#tabPlaylists':
-                if (debug) { console.log("TAG PLAYLIST"); }
-                loadPlaylists();
-    			loadFolders();
-                break;
-            case '#tabPreferences':
-                break;
-            default:
-                break;
-        }
-    }
+if (getCookie('Protocol')) {
+    protocol = 'jsonp';
 }
-
-
-
+var auth = makeBaseAuth(username, password.substring(4, password.length).hexDecode());
+baseParams = 'u=' + username + '&p=' + password + '&f=' + protocol + '&v=' + apiVersion + '&c=' + applicationName;
