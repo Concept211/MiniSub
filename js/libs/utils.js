@@ -280,6 +280,7 @@ function showNotification(pic, title, text, type, bind) {
     if (hasNotificationPermission()) {
         //closeAllNotifications()
         var popup;
+		var notificationTimeout = getCookie('NotificationTimeout');
         if (type == 'text') {
             popup = window.webkitNotifications.createNotification(pic, title, text);
         } else if (type == 'html') {
@@ -294,7 +295,7 @@ function showNotification(pic, title, text, type, bind) {
         notifications.push(popup);
         setTimeout(function (notWin) {
             notWin.cancel();
-        }, 20000, popup);
+        }, notificationTimeout * 1000, popup);
         popup.show();
     } else {
         console.log("showNotification: No Permission");

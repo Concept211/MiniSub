@@ -14,6 +14,7 @@ var smwidth;
 var apiVersion = '1.6.0';
 var currentVersion = '2.4.1';
 var applicationName;
+var notificationTimeout;
 var unity;
 
 // Get URL Querystring Parameters
@@ -46,6 +47,11 @@ if (getCookie('ApplicationName')) {
     applicationName = getCookie('ApplicationName');
 } else {
     applicationName = 'MiniSub';
+}
+if (getCookie('NotificationTimeout')) {
+    notificationTimeout = getCookie('NotificationTimeout');
+} else {
+    notificationTimeout = '20';
 }
 if (getCookie('username')) {
     username = getCookie('username');

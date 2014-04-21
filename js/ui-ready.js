@@ -16,6 +16,7 @@
     if (getCookie('AutoPlaylistSize')) { $('#AutoPlaylistSize').val(getCookie('AutoPlaylistSize')); }
     if (getCookie('Server')) { $('#Server').val(getCookie('Server')); }
     if (getCookie('ApplicationName')) { $('#ApplicationName').val(getCookie('ApplicationName')); }
+	if (getCookie('NotificationTimeout')) { $('#NotificationTimeout').val(getCookie('NotificationTimeout')); }
 
     // Set Settings defaults
     if (getCookie('Theme')) {
@@ -1069,6 +1070,11 @@
             applicationName = $('#ApplicationName').val();
             setCookie('ApplicationName', applicationName);
         }
+		// Notification Timeout
+        if ($('#NotificationTimeout').val() != "") {
+            notificationTimeout = $('#NotificationTimeout').val();
+            setCookie('NotificationTimeout', notificationTimeout);
+        }
         // Hide AZ
         if ($('#HideAZ').is(':checked')) {
             setCookie('HideAZ', '1');
@@ -1159,6 +1165,7 @@
         setCookie('AutoPlaylistSize', null);
         setCookie('Server', null);
         setCookie('ApplicationName', null);
+		setCookie('NotificationTimeout', null);
         setCookie('HideAZ', null);
         location.reload(true);
     });
